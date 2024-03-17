@@ -1,10 +1,10 @@
 import click, pytest, sys
 from flask import Flask
 from flask.cli import with_appcontext, AppGroup
-
+import csv
 from App.database import db, get_migrate
 from App.main import create_app
-from App.controllers import ( create_user, get_all_users_json, get_all_users )
+from App.controllers import ( create_user, get_all_users_json, get_all_users, create_new_product )
 
 # This commands file allow you to create convenient CLI commands for testing controllers
 
@@ -16,6 +16,20 @@ migrate = get_migrate(app)
 def initialize():
     db.drop_all()
     db.create_all()
+    with open('products.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            # Create the product object from the information of each row in the csv
+            product = create_new_product(name=row['Product Name'],
+                            category=row['Category'],
+                            price=row['Selling Price'],
+                            image=row['Image'],
+                            about=row['About Product'])
+            # adds the each product to the database
+            db.session.add(product)
+        # Commits the changes to the database
+        db.session.commit()
+    print("Completed Adding of products to database!")
     create_user('bob', 'bobpass')
     print('database intialized')
 

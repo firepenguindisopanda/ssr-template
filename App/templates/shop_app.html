@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}Shop App{% endblock %}
+{% block page %}Shop App{% endblock %}
+
+{{ super() }}
+
+{% block content %}
+<section class="row">
+    <!-- Products Section -->
+    <div class="col s12 m9 l9">
+        <h5 class="center-align">Products</h5>
+        <div class="row">
+            {% for product in products %}
+            <div class="col s12 m4 l4">
+                <div class="card">
+                    <div class="card-image">
+                        <!-- <img src="{{ product.image }}" alt="{{ product.name }}"> -->
+                    </div>
+                    <div class="card-content">
+                        <p> product.name</p>
+                        <p>Price: product.price </p>
+                    </div>
+                    <div class="card-action">
+                        <a href="#!" class="waves-effect waves-light btn right">Add to Cart</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="col s12 m3 l3">
+        <h5 class="center-align">Cart</h5>
+        
+        <ul class="collection" style="overflow-y: scroll; height:70vh;">
+            {% for item in cart_items.cart %}
+            <li class="collection-item avatar">
+                <p>{{item.name}}</p>
+                <p>Price: ${{item.price}}</p>
+                <form class="row">
+                    <div class="input-field col s5">
+                      <label for="icon_prefix2">Quantity: </label>
+
+                     <input name="quantity" value="{{item.quantity}}" type="number">
+                    </div>
+                    <div class="input-field col s4">
+                        <button class="btn waves-effect waves-light" type="submit">
+                          Update
+                        </button>
+                    </div>
+                </form>
+            </li>
+            
+            {% endfor %}
+            <p class="brand-logo center-align flow-text">
+              <strong>Total:</strong> ${{cart_items.total}}
+            </p>  
+          </ul>
+    </div>
+</section>
+{% endblock %}
