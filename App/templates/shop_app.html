@@ -11,17 +11,24 @@
         <h5 class="center-align">Products</h5>
         <div class="row">
             {% for product in products %}
-            <div class="col s12 m4 l4">
+            <div class="col s12 m4">
                 <div class="card">
                     <div class="card-image">
-                        <!-- <img src="{{ product.image }}" alt="{{ product.name }}"> -->
+                        <img src="{{ product.image }}">
                     </div>
                     <div class="card-content">
-                        <p> product.name</p>
-                        <p>Price: product.price </p>
+                        <span class="card-title truncate-tooltip tooltipped" data-position="bottom"
+                            data-tooltip="{{ product.name }}">{{ product.name }}</span>
+                        <p class="truncate-tooltip tooltipped" data-position="bottom"
+                            data-tooltip="{{ product.about }}">{{ product.about }}</p>
+                        <p>${{ product.price }}</p>
                     </div>
+
                     <div class="card-action">
-                        <a href="#!" class="waves-effect waves-light btn right">Add to Cart</a>
+                        <form action="/cart/add" method="POST">
+                            <input type="hidden" name="product_id" value="{{ product.id }}">
+                            <button type="submit" class="btn waves-effect waves-light">Add To Cart</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -34,29 +41,28 @@
         <h5 class="center-align">Cart</h5>
         
         <ul class="collection" style="overflow-y: scroll; height:70vh;">
-            {% for item in cart_items.cart %}
-            <li class="collection-item avatar">
-                <p>{{item.name}}</p>
+            {% for item in cart_items_to_display %}
+            <li class="collection-item">
+                <p class="flow-text">{{item.name}}</p>
                 <p>Price: ${{item.price}}</p>
-                <form class="row">
+                <form class="row" action="/cart/update" method="POST">
                     <div class="input-field col s5">
-                      <label for="icon_prefix2">Quantity: </label>
-
-                     <input name="quantity" value="{{item.quantity}}" type="number">
+                        <label for="icon_prefix2">Quantity: </label>
+                        <input name="quantity" value="{{item.quantity}}" type="number" min="0">
                     </div>
                     <div class="input-field col s4">
-                        <button class="btn waves-effect waves-light" type="submit">
-                          Update
-                        </button>
+                        <button class="btn waves-effect waves-light" type="submit">Update</button>
                     </div>
+                    <input type="hidden" name="cart_item_id" value="{{item.id}}">
+                </form>
+                <form action="/cart/remove" method="POST">
+                    <input type="hidden" name="cart_item_id" value="{{item.id}}">
+                    <button type="submit" class="waves-effect waves-light btn-small">Remove</button>
                 </form>
             </li>
-            
             {% endfor %}
-            <p class="brand-logo center-align flow-text">
-              <strong>Total:</strong> ${{cart_items.total}}
-            </p>  
-          </ul>
+            <p class="brand-logo center-align flow-text"><strong>Total:</strong> ${{cart_total}}</p>
+        </ul>
     </div>
 </section>
 {% endblock %}

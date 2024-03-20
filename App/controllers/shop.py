@@ -1,5 +1,6 @@
 from App.models import Product, Cart
 from App.database import db
+from sqlalchemy.orm import joinedload
 
 def create_new_product(name,category,price,image,about):
     newproduct = Product(name=name,category=category,price=price,image=image,about=about)
@@ -11,9 +12,13 @@ def get_all_products():
     """Retrieves all products from the database."""
     return Product.query.all()
 
-def search_products(query):
-    """Searches for products based on a given query."""
-    return Product.query.filter(Product.name.ilike(f"%{query}%")).all()
+def product_search(search):
+  products = Product.query.filter(
+      Product.name.like('%' + search + '%') |
+      Product.about.like('%' + search + '%') |
+      Product.category.like('%' + search + '%')
+  ).all()
+  return products
 
 def add_to_cart(product_id, quantity=1):
     """Adds a product to the cart with the specified quantity."""
@@ -28,6 +33,26 @@ def add_to_cart(product_id, quantity=1):
 def get_cart_items():
     """Retrieves all items currently in the cart."""
     return Cart.query.all()
+
+def get_cart_items_with_product_info():
+    """Retrieves all items currently in the cart along with product information."""
+    cart_items = Cart.query.options(joinedload(Cart.product)).all()
+
+    # Extract relevant information from each cart item and its associated product
+    cart_items_with_product_info = []
+    for cart_item in cart_items:
+        product_info = {
+            'id': cart_item.id,
+            'quantity': cart_item.quantity,
+            'date_added': cart_item.date_added,
+            'product_id': cart_item.product.id,
+            'name': cart_item.product.name,
+            'price': cart_item.product.price,
+            'image': cart_item.product.image,
+            'about': cart_item.product.about
+        }
+        cart_items_with_product_info.append(product_info)
+    return cart_items_with_product_info
 
 def update_cart_item(cart_item_id, quantity):
     """Updates the quantity of a cart item."""
