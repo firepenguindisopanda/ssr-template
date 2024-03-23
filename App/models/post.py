@@ -3,26 +3,26 @@ from App.models.user import User
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    userId = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     text = db.Column(db.String)
+    reactions = db.relationship('UserReact', backref='post', cascade='all,delete', lazy=True)
 
-    def __init__(self, userId, text):
-        self.userId = userId
+    def __init__(self, user_id, text):
+        self.user_id = user_id
         self.text = text
 
-    def getTotalLikes(self):
-        return UserReact.query.filter_by(postId=self.id, react='like').count()
-
-    def getTotalDislikes(self):
-        return UserReact.query.filter_by(postId=self.id, react='dislike').count()
-
-    def toDict(self):
-        author = User.query.get(self.userId)
+    def to_dict(self):
         return {
             'id': self.id,
-            'userId': self.userId,
+            'user_id': self.user_id,
             'text': self.text,
-            'username': author.username,
-            'likes': self.getTotalLikes(),
-            'dislikes': self.getTotalDislikes()
+            'username': self.author.username,
+            'likes': self.get_total_likes(),
+            'dislikes': self.get_total_dislikes()
         }
+
+    def get_total_likes(self):
+        return UserReact.query.filter_by(post_id=self.id, react='like').count()
+
+    def get_total_dislikes(self):
+        return UserReact.query.filter_by(post_id=self.id, react='dislike').count()
