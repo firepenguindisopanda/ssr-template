@@ -5,34 +5,30 @@
 {{ super() }}
 
 {% block content %}
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--4-offset-desktop mdl-cell--4-offset-tablet mdl-cell--4-offset-phone mdl-cell--4-col-desktop mdl-cell--4-col-tablet mdl-cell--4-col-phone">
+    <h1>{{ current_user.username }}'s Blog</h1>
+    <!-- Form for creating a post -->
+    <form action="/submit_post" method="POST" class="mdl-grid">
+      <!-- Title input -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+        <input class="mdl-textfield__input" type="text" id="post_title" name="post_title">
+        <label class="mdl-textfield__label" for="post_title">Title</label>
+      </div>
 
-<div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-  <div class="mdl-cell mdl-cell--1-col">1</div>
-</div>
-<div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--4-col">4</div>
-  <div class="mdl-cell mdl-cell--4-col">4</div>
-  <div class="mdl-cell mdl-cell--4-col">4</div>
-</div>
-<div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--6-col">6</div>
-  <div class="mdl-cell mdl-cell--4-col">4</div>
-  <div class="mdl-cell mdl-cell--2-col">2</div>
-</div>
-<div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--6-col mdl-cell--8-col-tablet">6 (8 tablet)</div>
-  <div class="mdl-cell mdl-cell--4-col mdl-cell--6-col-tablet">4 (6 tablet)</div>
-  <div class="mdl-cell mdl-cell--2-col mdl-cell--4-col-phone">2 (4 phone)</div>
+      <!-- Post text area -->
+      <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-cell mdl-cell--12-col">
+        <textarea class="mdl-textfield__input" type="text" rows="5" id="post_content" name="post_content"></textarea>
+        <label class="mdl-textfield__label" for="post_content">Your post</label>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit"
+        class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored mdl-cell mdl-cell--12-col">
+        Post
+      </button>
+    </form>
+
+  </div>
 </div>
 {% endblock %}

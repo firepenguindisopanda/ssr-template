@@ -14,6 +14,7 @@ from App.controllers import (
 post_views = Blueprint('post_views', __name__, template_folder='../templates')
 
 @post_views.route('/post', methods=['GET'])
+@jwt_required()
 def get_shop_page():
     
-    return render_template('post.html')
+    return render_template('post.html', current_user=jwt_current_user)
